@@ -1,0 +1,1 @@
+clang++ -x c++-header -fsanitize=address -std=c++20 -Wall -Wextra -Wshadow -DONPC -O2  stdc++.h -o stdc++.h.pch
