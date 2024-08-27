@@ -1,6 +1,57 @@
 #ifdef ONPC
 #define _GLIBCXX_DEBUG
-// #include "bits/stdc++.h"
+#include <algorithm>
+#include <array>
+#include <atomic>
+#include <bitset>
+#include <chrono>
+#include <climits>
+#include <complex>
+#include <condition_variable>
+#include <deque>
+#include <exception>
+#include <forward_list>
+#include <fstream>
+#include <functional>
+#include <future>
+#include <initializer_list>
+#include <iomanip>
+#include <ios>
+#include <iosfwd>
+#include <iostream>
+#include <istream>
+#include <iterator>
+#include <limits>
+#include <list>
+#include <locale>
+#include <map>
+#include <memory>
+#include <mutex>
+#include <new>
+#include <numeric>
+#include <ostream>
+#include <queue>
+#include <random>
+#include <ratio>
+#include <regex>
+#include <scoped_allocator>
+#include <set>
+#include <sstream>
+#include <stack>
+#include <stdexcept>
+#include <streambuf>
+#include <string>
+#include <system_error>
+#include <thread>
+#include <tuple>
+#include <type_traits>
+#include <typeindex>
+#include <typeinfo>
+#include <unordered_map>
+#include <unordered_set>
+#include <utility>
+#include <valarray>
+#include <vector>
 #else
 #include <bits/stdc++.h>
 #endif
@@ -20,192 +71,79 @@ typedef long double ld;
 #else
 #define dbg(...)
 #endif
-template <int MODULO>
-struct ModularInt {
-    int value;
-    ModularInt(ll llvalue)
-        : value(llvalue % MODULO)
-    {
-        if (value < 0)
-            value += MODULO;
-    }
-    ModularInt(const ModularInt<MODULO>& other)
-        : value(other.value)
-    {
-    }
-    ModularInt()
-        : value(0)
-    {
-    }
-    inline void operator+=(ModularInt<MODULO> other)
-    {
-        value += other.value;
-        if (value >= MODULO)
-            value -= MODULO;
-    }
-    inline ModularInt<MODULO> operator+(ModularInt<MODULO> other) const
-    {
-        return ModularInt<MODULO>(value + other.value >= MODULO ? value + other.value - MODULO : value + other.value);
-    }
-    inline void operator-=(ModularInt<MODULO> other)
-    {
-        value -= other.value;
-        if (value < 0) {
-            value += MODULO;
-        }
-    }
-    inline ModularInt<MODULO> operator-(ModularInt<MODULO> other) const
-    {
-        return ModularInt<MODULO>(value - other.value < 0 ? value - other.value + MODULO : value - other.value);
-    }
-    inline ModularInt<MODULO> operator-() const { return ModularInt<MODULO>(value == 0 ? value : MODULO - value); }
-    inline ModularInt<MODULO>& operator++()
-    {
-        ++value;
-        if (value == MODULO) {
-            value = 0;
-        }
-        return *this;
-    }
-    inline ModularInt<MODULO> operator++(int)
-    {
-        ModularInt<MODULO> old(*this);
-        ++value;
-        if (value == MODULO) {
-            value = 0;
-        }
-        return old;
-    }
-    inline ModularInt<MODULO>& operator--()
-    {
-        --value;
-        if (value == -1) {
-            value = MODULO - 1;
-        }
-        return *this;
-    }
-    inline ModularInt<MODULO> operator--(int)
-    {
-        ModularInt<MODULO> old(*this);
-        --value;
-        if (value == -1) {
-            value = MODULO - 1;
-        }
-        return old;
-    }
-    inline ModularInt<MODULO> operator*(ModularInt<MODULO> other) const { return ModularInt<MODULO>(1LL * value * other.value); }
-    inline void operator*=(ModularInt<MODULO> other) { value = 1LL * value * other.value % MODULO; }
-    friend ModularInt<MODULO> binpow(ModularInt<MODULO> a, ll bll)
-    {
-        if (a.value == 0) {
-            return ModularInt<MODULO>(bll == 0 ? 1 : 0);
-        }
-        int b = bll % (MODULO - 1);
-        int ans = 1;
-        while (b) {
-            if (b & 1) {
-                ans = 1LL * ans * a.value % MODULO;
-            }
-            a.value = 1LL * a.value * a.value % MODULO;
-            b >>= 1;
-        }
-        return ModularInt<MODULO>(ans);
-    }
-    inline ModularInt<MODULO> inv() const { return binpow(*this, MODULO - 2); }
-    inline ModularInt<MODULO> operator/(ModularInt<MODULO> other) const { return (*this) * other.inv(); }
-    inline void operator/=(ModularInt<MODULO> other) { value = 1LL * value * other.inv().value % MODULO; }
-    inline bool operator==(ModularInt<MODULO> other) const { return value == other.value; }
-    inline bool operator!=(ModularInt<MODULO> other) const { return value != other.value; }
-    explicit operator int() const { return value; }
-    explicit operator bool() const { return value; }
-    explicit operator long long() const { return value; }
-    friend istream& operator>>(istream& inp, ModularInt<MODULO>& mint)
-    {
-        inp >> mint.value;
-        return inp;
-    }
-    friend ostream& operator<<(ostream& out, const ModularInt<MODULO>& mint)
-    {
-        out << mint.value;
-        return out;
-    }
-};
-const int MOD = 1000000007;
-
-typedef ModularInt<MOD> MInt;
-vector<MInt> fact(1, 1);
-vector<MInt> inv_fact(1, 1);
-
-MInt C(int n, int k)
-{
-    if (k < 0 || k > n) {
-        return 0;
-    }
-    MInt t = 1;
-    while ((int)fact.size() < n + 1) {
-        fact.push_back(fact.back() * (int)fact.size());
-        inv_fact.push_back(t / fact.back());
-    }
-    return fact[n] * inv_fact[k] * inv_fact[n - k];
-}
-int n;
-int m;
-const int N = 1e5 + 3;
-vector<int> a(N);
-MInt rec(vector<int> in)
-{
-
-    bool flag = true;
-    for (int i = 0; i < sz(in); i++) {
-        if (in[i] == 0) {
-            flag = false;
-        }
-    }
-    bool flag2 = true;
-    for (int i = 0; i < n - 1; i++) {
-        if (abs(in[i] - in[i + 1]) >= 2) {
-            flag2 = false;
-        }
-    }
-    if (!flag2 && flag) {
-        return MInt(0);
-    }
-    if (flag == true) {
-        return MInt(1);
-    }
-    MInt ans = 0;
-    if (a[0] == 0) {
-        for (int i = 0; i < m; i++) {
-            in[0] = i + 1;
-            ans += rec(in);
-        }
-        return ans;
-    }
-    for (int i = 0; i < sz(in); i++) {
-        if (in[i] == 0) {
-            in[i] = a[i - 1];
-            ans += rec(in);
-            if (a[i - 1] + 1 <= m) {
-                in[i] = a[i - 1] + 1;
-                ans += rec(in);
-            }
-            if (a[i - 1] - 1 >= 1) {
-                in[i] = a[i - 1] - 1;
-                ans += rec(in);
-            }
-        }
-    }
-    return ans;
-};
 
 int solve()
 {
-    cin >> n >> m;
-    a.resize(n);
-    for (int& val : a) {
-        cin >> val;
+    ll n;
+    if (!(cin >> n)) {
+        return 1;
     }
-    MInt gans = rec(a);
+    ll m;
+    cin >> m;
+    vector<ll> a(n);
+    for (int i = 0; i < n; i++) {
+        cin >> a[i];
+    }
+    vector<vector<ll>> dp(n, vector<ll>(m + 1, -1));
+    function<ll(ll, ll)> rec = [&](ll idx, ll val) {
+        if (val > m) {
+            return (ll)0;
+        }
+        if (val < 1) {
+            return (ll)0;
+        }
+        if (a[idx] != 0) {
+            if (a[idx] == val) {
+                return (ll)1;
+            } else
+                return (ll)0;
+        }
+        if (idx == n - 1) {
+            return (ll)1;
+        }
+        if (dp[idx][val] != -1) {
+            return dp[idx][val];
+        }
+        return dp[idx][val] = (((rec(idx + 1, val)) + (rec(idx + 1, val + 1)) % (ll)(1e9 + 7)) + (rec(idx + 1, val - 1)) % (ll)(1e9 + 7));
+    };
+    int flag = 0;
+    ll gans = 1;
+    ll ans = 0;
+    for (int i = 1; i < n; i++) {
+        if (a[i] != 0 && a[i - 1] != 0 && (abs(a[i] - a[i - 1]) > 1)) {
+            gans = 0;
+        }
+    }
+    dbg(gans);
+    for (int i = 0; i < n; i++) {
+        if (a[i] == 0 && flag == 0) {
+            flag = 1;
+            if (i != 0) {
+                ans += rec(i, a[i - 1] + 1);
+                ans %= (ll)1e9 + 7;
+                ans += rec(i, a[i - 1] - 1);
+                ans %= (ll)1e9 + 7;
+                ans += rec(i, a[i - 1] + 0);
+                ans %= (ll)1e9 + 7;
+            } else {
+                for (int j = 1; j <= m; j++) {
+                    ans += rec(i, j);
+                    ans %= (ll)1e9 + 7;
+                }
+            }
+        } else if (a[i] != 0 && flag == 1) {
+            flag = 0;
+            gans *= ans;
+            gans %= (ll)1e9 + 7;
+            ans = 0;
+        }
+    }
+    if (flag == 1) {
+        flag = 0;
+        gans *= ans;
+        gans %= (ll)1e9 + 7;
+        ans = 0;
+    }
     cout << gans << endl;
     return 0;
 }
@@ -215,7 +153,7 @@ int32_t main()
     // sieve(2e5+10);
     ios::sync_with_stdio(0);
     cin.tie(0);
-    int TET = 1;
+    int TET = 1e9;
     for (int i = 1; i <= TET; i++) {
         if (solve()) {
             break;

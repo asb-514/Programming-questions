@@ -54,31 +54,36 @@ struct DSU {
             return true;
         }
     }
-};  
-int solve() {
+};
+int solve()
+{
     int n;
     if (!(cin >> n)) {
         return 1;
     }
     queue<vector<int>> q; // t,u,v
-    int qu; cin >> qu;
+    int qu;
+    cin >> qu;
     for (ll i = 0; i < qu; i++) {
         vector<int> t(3);
         for (ll j = 0; j < 3; j++) {
             cin >> t[j];
         }
-        q. push(t);
+        q.push(t);
     }
     DSU dsu(n);
-    while(!q.empty()) {
-        auto now = q.front(); q.pop();
+    auto pval = [&](int x) { cout << x << endl; };
+    while (!q.empty()) {
+        auto now = q.front();
+        q.pop();
         assert(sz(now) == 3);
         if (now[0] == 0) {
-            dsu.unite(now[1],now[2]);
-        }
-        else {
-            if(dsu.check(now[1],now[2])) pval(1);
-            else pval(0);
+            dsu.unite(now[1], now[2]);
+        } else {
+            if (dsu.check(now[1], now[2]))
+                pval(1);
+            else
+                pval(0);
         }
     }
     return 1;
